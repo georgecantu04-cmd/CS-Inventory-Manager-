@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CS2 Inventory Tracker</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎮 CS2 Inventory Tracker</h1>
+            <p class="subtitle">Track your Counter-Strike 2 inventory value and profits</p>
+        </header>
+
+        <!-- Alert Banner -->
+        <div id="alert-banner" class="alert-banner hidden">
+            <span id="alert-message"></span>
+            <button onclick="closeAlert()">&times;</button>
+        </div>
+
+        <!-- Control Panel -->
+        <div class="control-panel">
+            <button onclick="syncInventory()" class="btn btn-primary">
+                <span id="sync-text">Sync Inventory</span>
+                <span id="sync-spinner" class="spinner hidden"></span>
+            </button>
+            <button onclick="updatePrices()" class="btn btn-secondary">
+                <span id="update-text">Update Prices</span>
+                <span id="update-spinner" class="spinner hidden"></span>
+            </button>
+            <button onclick="refreshData()" class="btn btn-secondary">Refresh Data</button>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="summary-grid">
+            <div class="card">
+                <div class="card-header">Total Items</div>
+                <div class="card-value" id="total-items">-</div>
+            </div>
+            <div class="card">
+                <div class="card-header">Total Value</div>
+                <div class="card-value" id="total-value">$0.00</div>
+            </div>
+            <div class="card">
+                <div class="card-header">Total Invested</div>
+                <div class="card-value" id="total-invested">$0.00</div>
+            </div>
+            <div class="card">
+                <div class="card-header">Profit/Loss</div>
+                <div class="card-value" id="profit-loss">$0.00</div>
+                <div class="card-subvalue" id="profit-loss-percentage">(0%)</div>
+            </div>
+        </div>
+
+        <!-- Price Alerts -->
+        <div class="section">
+            <h2>Price Alerts</h2>
+            <div id="alerts-container" class="alerts-container">
+                <p class="no-data">No alerts yet. Prices will be monitored automatically.</p>
+            </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="charts-grid">
+            <div class="chart-container">
+                <h3>Inventory Value History</h3>
+                <canvas id="inventory-chart"></canvas>
+            </div>
+        </div>
+
+        <!-- Inventory Table -->
+        <div class="section">
+            <h2>Inventory Items</h2>
+            <div class="table-controls">
+                <input type="text" id="search-input" placeholder="Search items..." onkeyup="filterItems()">
+                <select id="sort-select" onchange="sortItems()">
+                    <option value="name">Sort by Name</option>
+                    <option value="value-desc">Sort by Value (High to Low)</option>
+                    <option value="value-asc">Sort by Value (Low to High)</option>
+                    <option value="profit-desc">Sort by Profit (High to Low)</option>
+                    <option value="profit-asc">Sort by Profit (Low to High)</option>
+                </select>
+            </div>
+            <div class="table-wrapper">
+                <table id="inventory-table">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Type</th>
+                            <th>Rarity</th>
+                            <th>Exterior</th>
+                            <th>Current Price</th>
+                            <th>Purchase Price</th>
+                            <th>Profit/Loss</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inventory-tbody">
+                        <tr>
+                            <td colspan="8" class="no-data">No items yet. Click "Sync Inventory" to load your items.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for setting purchase price -->
+    <div id="price-modal" class="modal hidden">
+        <div class="modal-content">
+            <h3>Set Purchase Price</h3>
+            <p id="modal-item-name"></p>
+            <input type="number" id="purchase-price-input" placeholder="Enter purchase price" step="0.01" min="0">
+            <div class="modal-actions">
+                <button onclick="savePurchasePrice()" class="btn btn-primary">Save</button>
+                <button onclick="closeModal()" class="btn btn-secondary">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
